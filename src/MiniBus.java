@@ -1,9 +1,10 @@
 public class MiniBus extends Wehicle{
-    public String toString(){
-        return getClass().getName();
+    public MiniBus(double timeToWash) {
+        super(timeToWash);
     }
-    @Override
-    public void run() {
 
+    public String toString(){
+        return "ID:"+Thread.currentThread().getId() + " - "+ getClass().getName();
     }
+
 }

@@ -1,30 +1,38 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 public class WehicleWasher {
-    static ArrayList<Wehicle> waitingList = new ArrayList<Wehicle>();
-    static ArrayList<Wehicle> gettingWashedList = new ArrayList<Wehicle>();
-    static ArrayList<Wehicle> suvList = new ArrayList<Wehicle>();
-    static ArrayList<Wehicle> truckList = new ArrayList<Wehicle>();
-    static ArrayList<Wehicle> carList = new ArrayList<Wehicle>();
-    static ArrayList<Wehicle> miniBusList = new ArrayList<Wehicle>();
-    public static void main(String[] args){
-        Scanner s = new Scanner(System.in);
-        System.out.println("Please enter number of washing stands:");
-        int numberOfWashingStands = s.nextInt();
-        System.out.println("Please enter number of vehicles to wash:");
-        int numberOfCarsToWash = s.nextInt();
-        System.out.println("Please enter average time between car arrivals:");
-        float lambdaArrivale = s.nextFloat();
-        System.out.println("Please enter average time between car washes:");
-        float lambdaWash = s.nextFloat();
-        try {
-            generateVehicles(lambdaArrivale);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    //Static fields
+    static ArrayList<Wehicle> waitingList = new ArrayList<>();
+    static ArrayList<Wehicle> suvList = new ArrayList<>();
+    static ArrayList<Wehicle> truckList = new ArrayList<>();
+    static ArrayList<Wehicle> carList = new ArrayList<>();
+    static ArrayList<Wehicle> miniBusList = new ArrayList<>();
+    static Object lock = new Object();
+    //Helper functions
+    public static synchronized int getNumOfTotalVehicleWashed(){
+        return carList.size() + truckList.size() + suvList.size() + miniBusList.size();
+    }
 
+    public static void insertDoneVehicle(Wehicle v){
+        if(v instanceof Car) {
+            carList.add(v);
+        }
+        if(v instanceof SUV) {
+            suvList.add(v);
+        }
+        if(v instanceof Truck) {
+            truckList.add(v);
+        }
+        if(v instanceof MiniBus) {
+            miniBusList.add(v);
+        }
+    }
+
+    public static synchronized long getSystemTime(){
+        return System.currentTimeMillis();
     }
 
     public static double nextTime(float randomTime,float lambda){
@@ -36,39 +44,106 @@ public class WehicleWasher {
         }
 
     }
-    public static void goToWehicleWasher(){
 
-    }
-    public static void generateVehicles(float lambdaArrivale) throws InterruptedException {
-        boolean notFinished = true;
+    public static void generateVehicles(float lambdaArrival,float lambdaWash) throws InterruptedException {
         Random r = new Random();
-        while(notFinished){
-            double nextTime = nextTime(r.nextFloat(1),lambdaArrivale);
-//            Thread.sleep((long)nextTime*1000);
-            Thread.sleep(1000);
-
-            switch(r.nextInt(4)){
-                case 0://Car
-                    System.out.println("Car");
-                    waitingList.add(new Car());
-                    break;
-                case 1://SUV
-                    System.out.println("SUV");
-                    waitingList.add(new SUV());
-                    break;
-                case 2://MiniBus
-                    System.out.println("MiniBus");
-                    waitingList.add(new MiniBus());
-                    break;
-                case 3://Truck
-                    System.out.println("Truck");
-                    waitingList.add(new Truck());
-                    break;
-                default:
-                    System.out.println("should not be here");
-                    break;
-            }
-//            notFinished = false;
+        double nextNewCar = nextTime(r.nextFloat(1),lambdaArrival);
+        double timeToWash = nextTime(r.nextFloat(1),lambdaWash);
+        Thread.sleep((long)nextNewCar);
+//        Thread.sleep(1000);
+        switch(r.nextInt(4)){
+//        switch(1){
+            case 0://Car
+                waitingList.add(new Car(timeToWash));
+                Thread t1 = new Thread(waitingList.get(waitingList.size()-1));
+                t1.start();
+                break;
+            case 1://SUV
+                waitingList.add(new SUV(timeToWash));
+                Thread t2 = new Thread(waitingList.get(waitingList.size()-1));
+                t2.start();
+                break;
+            case 2://MiniBus
+                waitingList.add(new MiniBus(timeToWash));
+                Thread t3 = new Thread(waitingList.get(waitingList.size()-1));
+                t3.start();
+                break;
+            case 3://Truck
+                waitingList.add(new Truck(timeToWash));
+                Thread t4 = new Thread(waitingList.get(waitingList.size()-1));
+                t4.start();
+                break;
+            default:
+                System.out.println("should not be here");
+                break;
         }
     }
+
+    //Main
+    public static void main(String[] args) throws IOException {
+        WehicleLogger.init();
+        Scanner s = new Scanner(System.in);
+        System.out.println("Please enter number of washing stands:");
+        int numberOfWashingStands = s.nextInt();
+        System.out.println("Please enter number of vehicles to wash:");
+        int numberOfCarsToWash = s.nextInt();
+        System.out.println("Please enter average time between car arrivals:");
+        float lambdaArrival = s.nextFloat();
+        System.out.println("Please enter average time between car washes:");
+        float lambdaWash = s.nextFloat();
+        Wehicle[] washingStandsArr = new Wehicle[numberOfWashingStands];
+        try {
+            while(getNumOfTotalVehicleWashed() < numberOfCarsToWash) {
+                generateVehicles(lambdaArrival, lambdaWash);
+                Thread.sleep(1000);
+                for (int i = 0; i < numberOfWashingStands; i++) {
+                    //if queue not empty we dequeue from waiting list and insert into washing stand, and we notify the thread that
+                    // he can proceed into the wash phase
+                    if (waitingList.size() > 0) {
+
+                        if (washingStandsArr[i] == null) {
+                            washingStandsArr[i] = waitingList.remove(0);
+                            synchronized (washingStandsArr[i].getLock()) {
+                                washingStandsArr[i].getLock().notifyAll();
+                            }
+
+                        } else if (washingStandsArr[i].isFinished) {
+                            insertDoneVehicle(washingStandsArr[i]);
+                            synchronized (washingStandsArr[i].getLock()) {
+                                washingStandsArr[i].getLock().notifyAll();
+                            }
+                            washingStandsArr[i] = null;
+                        }
+                    }
+                }
+            }
+            double carWashAvg = 0;
+            double suvWashAvg = 0;
+            double busWashAvg = 0;
+            double truckWashAvg = 0;
+            for(Wehicle c : carList){
+                carWashAvg += c.washTime;
+            }
+            for(Wehicle c : suvList){
+                suvWashAvg += c.washTime;
+            }
+            for(Wehicle c : miniBusList){
+                busWashAvg += c.washTime;
+            }
+            for(Wehicle c : truckList){
+                truckWashAvg += c.washTime;
+            }
+            Thread.sleep(2000);
+            System.out.println(getNumOfTotalVehicleWashed());
+            System.out.println("Car average wash time in sec:"+carWashAvg/carList.size()/1000);
+            System.out.println("SUV average wash time in sec:"+suvWashAvg/suvList.size()/1000);
+            System.out.println("Truck average wash time in sec:"+truckWashAvg/truckList.size()/1000);
+            System.out.println("Minibus average wash time in sec:"+busWashAvg/miniBusList.size()/1000);
+            WehicleLogger.close();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

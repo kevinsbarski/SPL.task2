@@ -1,9 +1,10 @@
 public class SUV extends Wehicle{
-    public String toString(){
-        return getClass().getName();
-    }
-    @Override
-    public void run() {
 
+
+    public SUV(double timeToWash) {
+        super(timeToWash);
+    }
+    public String toString(){
+        return "ID:"+Thread.currentThread().getId() + " - "+ getClass().getName();
     }
 }

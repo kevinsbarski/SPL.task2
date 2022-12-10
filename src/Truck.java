@@ -1,9 +1,9 @@
 public class Truck extends Wehicle{
-    public String toString(){
-        return getClass().getName();
+    public Truck(double timeToWash) {
+        super(timeToWash);
     }
-    @Override
-    public void run() {
-        WehicleWasher.goToWehicleWasher();
+
+    public String toString() {
+            return "ID:"+Thread.currentThread().getId() + " - "+ getClass().getName();
     }
 }

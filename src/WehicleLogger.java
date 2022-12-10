@@ -1,13 +1,21 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class WehicleLogger {
-    public synchronized static void readLog(){
+    static Object lock = new Object();
+    static FileWriter log;
+    public synchronized  static void init() throws IOException {
+        log = new FileWriter("log.txt");
+    }
+    public static void writeToLog(String msg) throws IOException {
+        synchronized (lock) {
+            log.write(msg+'\n');
+        }
 
     }
 
-    public synchronized static void writeToLog(String msg){
-
+    public static void close() throws IOException {
+        log.close();
     }
-    public static void main(String[] args){
-
-    }
-
 }
