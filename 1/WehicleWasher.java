@@ -11,6 +11,7 @@ public class WehicleWasher {
     static ArrayList<Wehicle> carList = new ArrayList<>();
     static ArrayList<Wehicle> miniBusList = new ArrayList<>();
     static Object lock = new Object();
+    static long startTime = System.currentTimeMillis();
     //Helper functions
     public static synchronized int getNumOfTotalVehicleWashed(){
         return carList.size() + truckList.size() + suvList.size() + miniBusList.size();
@@ -32,7 +33,7 @@ public class WehicleWasher {
     }
 
     public static synchronized long getSystemTime(){
-        return System.currentTimeMillis();
+        return System.currentTimeMillis() - startTime;
     }
 
     public static double nextTime(float randomTime,float lambda){
@@ -46,6 +47,7 @@ public class WehicleWasher {
     }
 
     public static void generateVehicles(float lambdaArrival,float lambdaWash) throws InterruptedException {
+
         Random r = new Random();
         double nextNewCar = nextTime(r.nextFloat(1),lambdaArrival);
         double timeToWash = nextTime(r.nextFloat(1),lambdaWash);
@@ -92,9 +94,12 @@ public class WehicleWasher {
         System.out.println("Please enter average time between car washes:");
         float lambdaWash = s.nextFloat();
         Wehicle[] washingStandsArr = new Wehicle[numberOfWashingStands];
+        int numOfGen = 0;
         try {
             while(getNumOfTotalVehicleWashed() < numberOfCarsToWash) {
+
                 generateVehicles(lambdaArrival, lambdaWash);
+
                 Thread.sleep(1000);
                 for (int i = 0; i < numberOfWashingStands; i++) {
                     //if queue not empty we dequeue from waiting list and insert into washing stand, and we notify the thread that
@@ -133,13 +138,15 @@ public class WehicleWasher {
             for(Wehicle c : truckList){
                 truckWashAvg += c.washTime;
             }
-            Thread.sleep(2000);
+            System.out.println("Waiting for log file writings to be done");
+            Thread.sleep(5000);
             System.out.println(getNumOfTotalVehicleWashed());
             System.out.println("Car average wash time in sec:"+carWashAvg/carList.size()/1000);
             System.out.println("SUV average wash time in sec:"+suvWashAvg/suvList.size()/1000);
             System.out.println("Truck average wash time in sec:"+truckWashAvg/truckList.size()/1000);
             System.out.println("Minibus average wash time in sec:"+busWashAvg/miniBusList.size()/1000);
             WehicleLogger.close();
+            System.exit(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

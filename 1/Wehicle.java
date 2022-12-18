@@ -35,30 +35,30 @@ public abstract class Wehicle implements Runnable {
                 lock.wait();
                 leave();
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("GoodBye ");
+//                e.printStackTrace();
             }
         }
-    Thread.currentThread().stop();
-
     }
 
     public void arrival() throws IOException {
         washTime = WehicleWasher.getSystemTime();
-        WehicleLogger.writeToLog("Time since system started:" + washTime);
-        System.out.println("Time since system started:" + washTime);
-        WehicleLogger.writeToLog("Arrival of:");
+        WehicleLogger.writeToLog("Time since system started:" + washTime/1000+'\n'+"Arrival of:\n"+this.toString());
+//        WehicleLogger.writeToLog("Time since system started:" + washTime);
+        System.out.println("Time since system started:" + washTime/1000);
+//        WehicleLogger.writeToLog("Arrival of:");
         System.out.println("Arrival of:");
-        WehicleLogger.writeToLog(this.toString());
+//        WehicleLogger.writeToLog(this.toString());
         System.out.println(this);
 
     }
 
     public void wash() throws InterruptedException, IOException {
         double time = WehicleWasher.getSystemTime();
-        WehicleLogger.writeToLog("Time since system started:" + time);
-        WehicleLogger.writeToLog("Washing of:");
-        WehicleLogger.writeToLog(this.toString());
-        System.out.println("Time since system started:" + time);
+        WehicleLogger.writeToLog("Time since system started:" + time/1000+'\n'+"Washing of:\n"+this.toString());
+//        WehicleLogger.writeToLog("Washing of:");
+//        WehicleLogger.writeToLog(this.toString());
+        System.out.println("Time since system started:" + time/1000);
         System.out.println("Washing of:");
         System.out.println(this);
         Thread.sleep((long) timeToWash);
@@ -69,10 +69,8 @@ public abstract class Wehicle implements Runnable {
     public void leave() throws IOException {
         double finishTime = WehicleWasher.getSystemTime();
         washTime = finishTime - washTime;
-        WehicleLogger.writeToLog("Time since system started:" + washTime);
-        WehicleLogger.writeToLog("Washing of:");
-        WehicleLogger.writeToLog(this.toString());
-        System.out.println("Time since system started:" + finishTime);
+        WehicleLogger.writeToLog("Time since system started:" + washTime/1000+'\n'+"departure of:\n"+this.toString());
+        System.out.println("Time since system started:" + finishTime/1000);
         System.out.println("departure of:");
         System.out.println(this);
 
