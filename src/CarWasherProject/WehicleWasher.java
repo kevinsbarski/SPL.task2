@@ -1,3 +1,5 @@
+package CarWasherProject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -55,22 +57,22 @@ public class WehicleWasher {
 //        Thread.sleep(1000);
         switch(r.nextInt(4)){
 //        switch(1){
-            case 0://Car
+            case 0://CarWasherProject.Car
                 waitingList.add(new Car(timeToWash));
                 Thread t1 = new Thread(waitingList.get(waitingList.size()-1));
                 t1.start();
                 break;
-            case 1://SUV
+            case 1://CarWasherProject.SUV
                 waitingList.add(new SUV(timeToWash));
                 Thread t2 = new Thread(waitingList.get(waitingList.size()-1));
                 t2.start();
                 break;
-            case 2://MiniBus
+            case 2://CarWasherProject.MiniBus
                 waitingList.add(new MiniBus(timeToWash));
                 Thread t3 = new Thread(waitingList.get(waitingList.size()-1));
                 t3.start();
                 break;
-            case 3://Truck
+            case 3://CarWasherProject.Truck
                 waitingList.add(new Truck(timeToWash));
                 Thread t4 = new Thread(waitingList.get(waitingList.size()-1));
                 t4.start();
@@ -81,7 +83,7 @@ public class WehicleWasher {
         }
     }
 
-    //Main
+    //TicTacToeProject.Main
     public static void main(String[] args) throws IOException {
         WehicleLogger.init();
         Scanner s = new Scanner(System.in);
@@ -141,9 +143,9 @@ public class WehicleWasher {
             System.out.println("Waiting for log file writings to be done");
             Thread.sleep(5000);
             System.out.println(getNumOfTotalVehicleWashed());
-            System.out.println("Car average wash time in sec:"+carWashAvg/carList.size()/1000);
-            System.out.println("SUV average wash time in sec:"+suvWashAvg/suvList.size()/1000);
-            System.out.println("Truck average wash time in sec:"+truckWashAvg/truckList.size()/1000);
+            System.out.println("CarWasherProject.Car average wash time in sec:"+carWashAvg/carList.size()/1000);
+            System.out.println("CarWasherProject.SUV average wash time in sec:"+suvWashAvg/suvList.size()/1000);
+            System.out.println("CarWasherProject.Truck average wash time in sec:"+truckWashAvg/truckList.size()/1000);
             System.out.println("Minibus average wash time in sec:"+busWashAvg/miniBusList.size()/1000);
             WehicleLogger.close();
             System.exit(0);

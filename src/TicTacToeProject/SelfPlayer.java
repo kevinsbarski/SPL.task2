@@ -1,3 +1,5 @@
+package TicTacToeProject;
+
 import java.util.Random;
 
 public class SelfPlayer extends Player{
@@ -73,8 +75,11 @@ public class SelfPlayer extends Player{
                                 System.out.println("Board is full");
                                 g2.playerTurn = !g2.playerTurn;
                                 g2.lock.notify();
-                                if (g2.gameOver)
+                                if (g2.gameOver){
+
                                     break;
+                                }
+
                             }
 
                         } else {

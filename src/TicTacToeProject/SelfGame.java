@@ -1,12 +1,11 @@
-public class UserGame extends  Game{
-    boolean playerTurn;
+package TicTacToeProject;
 
-    public UserGame(){
-        gameBoard = new Turn[3][3];
+public class SelfGame extends  Game{
+    boolean playerTurn;
+    public SelfGame(){
+
         playerTurn = true;
     }
-
-
 
     public synchronized void checkIfWon(){
         for(int i = 0 ; i < 3 ; i ++)
@@ -25,7 +24,6 @@ public class UserGame extends  Game{
 
         }
     }
-
     @Override
     public synchronized Turn getTurn() {
         if (playerTurn)
@@ -56,10 +54,10 @@ public class UserGame extends  Game{
     }
 
     public void StartGame(){
-        UserPlayer user = new UserPlayer(Turn.X,this);
-        SelfPlayer ai = new SelfPlayer(Turn.O,this);
-        Thread userThread = new Thread(user);
-        Thread aiThread = new Thread(ai);
+        SelfPlayer first = new SelfPlayer(Turn.X,this);
+        SelfPlayer sec = new SelfPlayer(Turn.O,this);
+        Thread userThread = new Thread(first);
+        Thread aiThread = new Thread(sec);
         userThread.start();
         aiThread.start();
     }

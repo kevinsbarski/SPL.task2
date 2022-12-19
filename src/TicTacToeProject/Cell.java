@@ -1,3 +1,5 @@
+package TicTacToeProject;
+
 public class Cell {
 
     int x;

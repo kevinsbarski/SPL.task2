@@ -1,3 +1,5 @@
+package CarWasherProject;
+
 import java.io.IOException;
 
 public abstract class Wehicle implements Runnable {
@@ -44,11 +46,11 @@ public abstract class Wehicle implements Runnable {
     public void arrival() throws IOException {
         washTime = WehicleWasher.getSystemTime();
         WehicleLogger.writeToLog("Time since system started:" + washTime/1000+'\n'+"Arrival of:\n"+this.toString());
-//        WehicleLogger.writeToLog("Time since system started:" + washTime);
+//        CarWasherProject.WehicleLogger.writeToLog("Time since system started:" + washTime);
         System.out.println("Time since system started:" + washTime/1000);
-//        WehicleLogger.writeToLog("Arrival of:");
+//        CarWasherProject.WehicleLogger.writeToLog("Arrival of:");
         System.out.println("Arrival of:");
-//        WehicleLogger.writeToLog(this.toString());
+//        CarWasherProject.WehicleLogger.writeToLog(this.toString());
         System.out.println(this);
 
     }
@@ -56,8 +58,8 @@ public abstract class Wehicle implements Runnable {
     public void wash() throws InterruptedException, IOException {
         double time = WehicleWasher.getSystemTime();
         WehicleLogger.writeToLog("Time since system started:" + time/1000+'\n'+"Washing of:\n"+this.toString());
-//        WehicleLogger.writeToLog("Washing of:");
-//        WehicleLogger.writeToLog(this.toString());
+//        CarWasherProject.WehicleLogger.writeToLog("Washing of:");
+//        CarWasherProject.WehicleLogger.writeToLog(this.toString());
         System.out.println("Time since system started:" + time/1000);
         System.out.println("Washing of:");
         System.out.println(this);

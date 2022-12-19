@@ -1,3 +1,5 @@
+package TicTacToeProject;
+
 import java.util.Scanner;
 
 public class UserPlayer extends Player{
@@ -33,8 +35,10 @@ public class UserPlayer extends Player{
                             System.out.println("Board is full");
                             g1.playerTurn = !g1.playerTurn;
                             g1.lock.notify();
-                            if(g1.gameOver)
+                            if(g1.gameOver){
                                 break;
+                            }
+
                         }
                     }
                     else {

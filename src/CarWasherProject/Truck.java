@@ -1,3 +1,5 @@
+package CarWasherProject;
+
 public class Truck extends Wehicle{
     public Truck(double timeToWash) {
         super(timeToWash);
