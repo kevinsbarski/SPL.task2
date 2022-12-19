@@ -1,5 +1,8 @@
 package CarWasherProject;
-
+/*
+Kevin Sbarski 324589480
+Amit Sherman 209284017
+ */
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

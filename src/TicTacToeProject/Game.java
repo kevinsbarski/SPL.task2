@@ -1,3 +1,7 @@
+/*
+Kevin Sbarski 324589480
+Amit Sherman 209284017
+ */
 package TicTacToeProject;
 
 public  abstract class  Game  {
@@ -14,11 +18,23 @@ public  abstract class  Game  {
     }
     public synchronized void printBoard() {
         for (int i = 0 ; i < gameBoard.length ; i++){
+            System.out.print("-------------");
+            System.out.println();
             for ( int j = 0 ; j < gameBoard[0].length ; j++){
-                System.out.print(gameBoard[i][j]+"  ");
+                System.out.print("|  ");
+                if(gameBoard[i][j] == null){
+                    System.out.print(" ");
+                }
+                else {
+                    System.out.print(gameBoard[i][j]);
+                }
+
+
             }
+            System.out.print("|");
             System.out.println();
         }
+        System.out.println("-------------");
     }
     public boolean notFull(){
         for (int i = 0 ; i < gameBoard.length ; i++){
