@@ -56,7 +56,7 @@ public class SelfPlayer extends Player{
                     e.printStackTrace();
                 }
             }
-            System.out.println("Self:" + Thread.currentThread().getId());
+            //System.out.println("Self:" + Thread.currentThread().getId());
         }
         else{
             while (!g2.gameOver) {
@@ -94,7 +94,7 @@ public class SelfPlayer extends Player{
                     e.printStackTrace();
                 }
             }
-            System.out.println("Self:" + Thread.currentThread().getId());
+            //System.out.println("Self:" + Thread.currentThread().getId());
         }
     }
 }
